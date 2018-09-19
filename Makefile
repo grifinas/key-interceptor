@@ -1,11 +1,12 @@
 COMPILER=g++
 MAIN=atest_intercep.cpp
 OBJECT=interceptor.o
+OTHER=KeyboardMap.cpp intercept_keys.cpp
 LIBDIR=-L.
 LIBS=-linterception
 WIN_INCLUDES=-IC:/Users/god/AppData/Local/Programs/Python/Python37/include
 UIX_INCLUDES=-I/usr/include/python3.6
-CFLAGS=-c -DNDEBUG -g -fwrapv -O3
+CFLAGS=-c -g -std=gnu++11
 
 OSFLAG 				:=
 ifeq ($(OS),Windows_NT)
@@ -45,24 +46,29 @@ ifeq ($(OSFLAG), WIN32)
 	INCLUDES=$(WIN_INCLUDES)
 	CLEAR=cls
 	RUN=./a.exe
+	RM=DEL
 else
 	INCLUDES=$(UIX_INCLUDES)
 	CLEAR=clear
 	RUN=./a.out
+	RM=rm
 endif
 
 
 
-build: clear compile link run
+build: clear clean compile link run
 
 compile:
-	$(COMPILER) $(CFLAGS) $(INCLUDES) $(MAIN) -o $(OBJECT)
+	$(COMPILER) $(CFLAGS) $(INCLUDES) $(MAIN) $(OTHER)
 
-link: $(OBJECT)
-	$(COMPILER) $(OBJECT) $(LIBDIR) $(LIBS)
+link: *.o
+	$(COMPILER) *.o $(LIBDIR) $(LIBS)
 
 clear:
 	$(CLEAR)
+
+clean:
+	$(RM) *.o
 
 run:
 	$(RUN)
